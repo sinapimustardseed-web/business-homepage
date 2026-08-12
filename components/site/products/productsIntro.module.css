@@ -1,0 +1,386 @@
+/* /products — ProductBriefing.dc.html (watermark intro + two inset solution banners).
+   Shared chrome/tokens from site.module.css via SiteChrome. */
+
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(16px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.intro {
+  position: relative;
+  min-height: 84vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 200px 40px 120px;
+  overflow: hidden;
+  text-align: center;
+}
+.watermark {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-family: var(--font-display);
+  font-size: min(32vw, 440px);
+  font-weight: 700;
+  color: rgba(23, 20, 15, 0.035);
+  letter-spacing: -0.05em;
+  white-space: nowrap;
+  pointer-events: none;
+  z-index: 0;
+  line-height: 1;
+}
+.introInner {
+  position: relative;
+  z-index: 2;
+  max-width: 980px;
+  margin: 0 auto;
+  animation: fadeUp 0.9s ease both;
+}
+.kicker {
+  font-family: var(--font-display);
+  font-size: 13px;
+  letter-spacing: 0.3em;
+  color: var(--accent-deep);
+  font-weight: 600;
+  text-transform: uppercase;
+  margin-bottom: 34px;
+}
+.title {
+  font-family: var(--font-body);
+  font-size: clamp(38px, 6vw, 84px);
+  line-height: 1.12;
+  font-weight: 700;
+  letter-spacing: -0.04em;
+  margin: 0 0 34px;
+  white-space: pre-line;
+  color: var(--ink);
+  text-wrap: balance;
+}
+.bar {
+  width: 56px;
+  height: 3px;
+  background: var(--accent);
+  margin: 0 auto 36px;
+  border-radius: 2px;
+}
+.body {
+  font-size: clamp(15px, 1.7vw, 19px);
+  line-height: 1.85;
+  color: rgba(23, 20, 15, 0.6);
+  /* Latest design: an 830px measure inside a 950px cap, with a 72px floor so the
+     two-line paragraph reserves its height before the reveal settles. */
+  width: 100%;
+  max-width: 950px;
+  min-height: 72px;
+  margin: 0 auto;
+  text-wrap: pretty;
+  word-break: keep-all;
+  /* Content supplies the intentional line breaks (see content/*.ts). */
+  white-space: pre-line;
+}
+
+/* ---------- Products — heading row + inset banners ---------- */
+.products {
+  padding: 40px 0 clamp(110px, 11vw, 180px);
+}
+.headingRow {
+  max-width: 1280px;
+  margin: 0 auto 56px;
+  padding: 0 56px 26px;
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 28px;
+  flex-wrap: wrap;
+}
+.productsLabel {
+  font-family: var(--font-display);
+  font-size: clamp(34px, 4.4vw, 62px);
+  font-weight: 700;
+  letter-spacing: -0.035em;
+  line-height: 0.95;
+  margin: 0;
+  color: var(--ink);
+}
+/* Latest design: a solid dark pill at the right of the heading row (not a text link). */
+.getInTouch {
+  display: inline-flex;
+  align-items: center;
+  gap: 11px;
+  font-size: 14px;
+  font-weight: 600;
+  color: #f7f4ee;
+  background: var(--ink);
+  padding: 15px 26px;
+  border-radius: 100px;
+  white-space: nowrap;
+  transition: gap 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.getInTouch:hover {
+  gap: 18px;
+}
+
+.bandStack {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 0 56px;
+  display: flex;
+  flex-direction: column;
+  gap: 40px;
+}
+.band {
+  position: relative;
+  display: block;
+  aspect-ratio: 5 / 2;
+  width: 100%;
+  overflow: hidden;
+  border-radius: 18px;
+  background: linear-gradient(135deg, #f4f3f1 0%, #e8e6e2 55%, #dcd9d3 100%);
+  border: 1px solid rgba(23, 20, 15, 0.09);
+}
+.bandImg {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  object-fit: contain;
+  object-position: right center;
+  mix-blend-mode: multiply;
+  transition: transform 0.7s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.band:hover .bandImg {
+  transform: translateY(-50%) scale(1.045);
+}
+/* The design's X-PILE banner uses a trimmed two-pile crop; the site ships the
+   untrimmed square render, so the box is sized to land the piles on the same
+   rectangle rather than filling the full banner height. */
+.imgXpile {
+  right: 13.7%;
+  /* 48.4% rather than 50% because the square render is not vertically centred
+     within its own canvas — this lands the piles on the design's rectangle. */
+  top: 48.4%;
+  height: 88%;
+  width: auto;
+  max-width: 60%;
+}
+.imgDome {
+  right: 0;
+  height: 100%;
+  width: 100%;
+}
+/* Left-to-right scrim so the copy column stays legible over the render. */
+.scrim {
+  position: absolute;
+  inset: 0;
+}
+.scrimXpile {
+  background: linear-gradient(
+    90deg,
+    rgba(244, 243, 241, 0.97) 0%,
+    rgba(244, 243, 241, 0.9) 30%,
+    rgba(244, 243, 241, 0.45) 50%,
+    rgba(244, 243, 241, 0) 66%
+  );
+}
+.scrimDome {
+  background: linear-gradient(
+    90deg,
+    rgba(244, 243, 241, 0.97) 0%,
+    rgba(244, 243, 241, 0.9) 30%,
+    rgba(244, 243, 241, 0.45) 52%,
+    rgba(244, 243, 241, 0) 68%
+  );
+}
+.bandHover {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  background: linear-gradient(90deg, rgba(238, 236, 232, 1) 0%, rgba(238, 236, 232, 0) 100%);
+  transition: opacity 0.3s ease;
+}
+.band:hover .bandHover,
+.band:focus-visible .bandHover {
+  opacity: 0.45;
+}
+.bandInner {
+  position: relative;
+  z-index: 2;
+  height: 100%;
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 20px;
+  padding: clamp(26px, 3.4vw, 46px);
+  color: var(--ink);
+}
+.bandCopy {
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 14px;
+}
+/* Adjustments_needed pair 4 (Intro_Design_app.png): the Design fits "With no concrete"
+   onto the third line and closes the paragraph in four lines; 480px cut it after "With"
+   and spilled a fifth line carrying only "carbon emissions.". The break positions swap
+   at 509px and again at 514px, so 511px sits mid-window. Korean is unaffected either
+   way — its three lines are authored breaks, the widest 479px.
+   The percentage rises with the cap: 46% of this band's 1074px content box is 494px,
+   which would still govern and leave the paragraph on five lines. */
+.copyXpile {
+  max-width: min(48%, 511px);
+}
+/* Korean needs >=532px: its third authored line measures 532px, and any narrower
+   orphans "일정하게 유지합니다." onto a line of its own. */
+.copyDome {
+  max-width: min(58%, 540px);
+}
+/* Adjustments_needed pair 6 (Intro_AIRDOME_Design_app.png): English wants the opposite
+   of Korean here — the Design ends its third line on "temperature", while 540px pulls
+   "swings." up and re-breaks everything after it. The window is 518-523px, so 520px is
+   applied to English only, leaving the Korean measure above intact. */
+@media (min-width: 901px) {
+  :global(html[lang="en"]) .copyDome {
+    max-width: min(58%, 520px);
+  }
+}
+.wordmark {
+  font-family: var(--font-body);
+  font-size: clamp(34px, 4.4vw, 64px);
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  line-height: 0.98;
+  margin: 0;
+  color: var(--ink);
+}
+.teaser {
+  font-size: clamp(13.5px, 1.2vw, 16px);
+  line-height: 1.7;
+  color: rgba(23, 20, 15, 0.62);
+  margin: 0;
+  text-wrap: pretty;
+  word-break: keep-all;
+  /* Content supplies the intentional line breaks (see content/*.ts). */
+  white-space: pre-line;
+}
+/* Latest design: .flowbtn at the banner's 12px/32px size — the same outlined-pill
+   family as the Home CTAs, resolved by hovering anywhere on the banner. */
+.readMore {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  background: transparent;
+  color: #111111;
+  padding: 12px 32px;
+  border: 1.5px solid rgba(51, 51, 51, 0.4);
+  border-radius: 100px;
+  font-size: 14px;
+  font-weight: 600;
+  white-space: nowrap;
+  transition:
+    background 0.6s cubic-bezier(0.23, 1, 0.32, 1),
+    border-color 0.6s cubic-bezier(0.23, 1, 0.32, 1),
+    border-radius 0.6s cubic-bezier(0.23, 1, 0.32, 1),
+    color 0.6s cubic-bezier(0.23, 1, 0.32, 1);
+}
+.band:hover .readMore,
+.band:focus-visible .readMore {
+  background: var(--ink);
+  border-color: transparent;
+  border-radius: 12px;
+  color: #ffffff;
+}
+.band:active .readMore {
+  transform: scale(0.95);
+}
+
+/* Confirmed corrections (e -> f): 희원 asked for a smaller introduction title with
+   the line organization screenshot f shows — "From foundation To structure," whole on
+   the first line, "without concrete." on the second. At 84px that first line needs
+   1080px of ink and could not fit the 980px .introInner, so it broke a third time
+   after "From foundation" (layout e). Measured against f, whose kicker and body ink
+   match this page 1:1, the design title is ~57.5px with a ~94px baseline pitch; 58px
+   at 1.6 leading reproduces both. Scoped above the site's 900px breakpoint so the
+   mobile title — which sits on the clamp's 38px floor either way — is untouched. */
+@media (min-width: 901px) {
+  .title {
+    font-size: clamp(44px, 4.1vw, 58px);
+    line-height: 1.6;
+  }
+}
+
+@media (max-width: 900px) {
+  .headingRow,
+  .bandStack {
+    padding-left: 22px;
+    padding-right: 22px;
+  }
+  .headingRow {
+    margin-bottom: 36px;
+  }
+  .bandStack {
+    gap: 28px;
+  }
+}
+/* Below ~700px a 5:2 banner is too short to hold the copy, so the card deepens and
+   the render moves to the lower right with a vertical scrim behind the text. */
+@media (max-width: 700px) {
+  .band {
+    aspect-ratio: 4 / 3;
+  }
+  .bandImg {
+    top: auto;
+    bottom: 0;
+    transform: none;
+    object-position: right bottom;
+  }
+  .band:hover .bandImg {
+    transform: none;
+  }
+  .imgXpile,
+  .imgDome {
+    right: 0;
+    height: 62%;
+    width: 100%;
+    max-width: 100%;
+  }
+  .scrimXpile,
+  .scrimDome {
+    background: linear-gradient(
+      180deg,
+      rgba(244, 243, 241, 0.97) 0%,
+      rgba(244, 243, 241, 0.92) 42%,
+      rgba(244, 243, 241, 0.35) 70%,
+      rgba(244, 243, 241, 0) 100%
+    );
+  }
+  .bandInner {
+    align-items: flex-start;
+  }
+  .copyXpile,
+  .copyDome {
+    max-width: 100%;
+  }
+}
+@media (max-width: 480px) {
+  .band {
+    aspect-ratio: 3 / 4;
+  }
+  .readMore {
+    padding: 12px 24px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .introInner {
+    animation: none !important;
+  }
+  .bandImg,
+  .bandHover,
+  .readMore {
+    transition: none !important;
+  }
+}

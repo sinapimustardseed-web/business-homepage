@@ -1,0 +1,654 @@
+/* Shared new-design system for all migrated routes.
+   Locally-hashed CSS-module classes — no global leakage. Tokens mirror the
+   Claude Design project (forest accent, white/near-black, dark footer). */
+
+.pageRoot {
+  --accent: #3f6b4a;
+  --accent-deep: #2c4d35;
+  --page-bg: #ffffff;
+  --dark-bg: #17140f;
+  --ink: #17140f;
+  --muted: #57534a;
+  --hairline: rgba(23, 20, 15, 0.1);
+  --radius: 2px;
+  --maxw: 1280px;
+  --font-display: var(--font-space-grotesk), "Space Grotesk", sans-serif;
+  --font-body: "Pretendard Variable", -apple-system, sans-serif;
+
+  position: relative;
+  width: 100%;
+  /* `clip`, not `hidden`: `hidden` makes this a scroll container, which silently
+     breaks `position: sticky` for the pinned applications rail inside it. The
+     Claude Design uses `overflow-x: clip` on its page-root for the same reason. */
+  overflow-x: clip;
+  background: var(--page-bg);
+  color: var(--ink);
+  font-family: var(--font-body);
+}
+
+/* ---------- keyframes (shared) ---------- */
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(16px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+@keyframes slowZoom {
+  from { transform: scale(1.08); }
+  to { transform: scale(1); }
+}
+
+/* scroll reveal (Home, Story) */
+.reveal {
+  opacity: 0;
+  transform: translateY(30px);
+  transition: opacity 1s cubic-bezier(0.16, 1, 0.3, 1), transform 1s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.reveal[data-revealed="true"] {
+  opacity: 1;
+  transform: none;
+}
+
+/* feature reveal (X-PILE / AirDome) */
+.featureReveal {
+  opacity: 0;
+  transform: translateY(24px) scale(0.97);
+  transition: opacity 0.7s cubic-bezier(0.16, 1, 0.3, 1), transform 0.7s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.featureReveal[data-revealed="true"] {
+  opacity: 1;
+  transform: translateY(0) scale(1);
+}
+
+/* stat column reveal (X-PILE / AirDome) */
+.statCol {
+  opacity: 0;
+  transform: translateY(30px);
+  transition: opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1), transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.statCol[data-revealed="true"] {
+  opacity: 1;
+  transform: none;
+}
+
+/* ---------- grain overlay ---------- */
+.grain {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  opacity: 0.035;
+  z-index: 500;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+/* ---------- header ---------- */
+.header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 24px 56px;
+  background: rgba(255, 255, 255, 0.82);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-bottom: 1px solid rgba(23, 20, 15, 0.08);
+}
+.logoLink {
+  display: flex;
+  align-items: center;
+}
+.nav {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  display: flex;
+  align-items: center;
+  gap: 40px;
+}
+.navLink {
+  font-size: 13px;
+  letter-spacing: 0.06em;
+  font-weight: 500;
+  color: var(--muted);
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-family: inherit;
+  padding: 0;
+}
+.navLink:hover {
+  color: var(--ink);
+}
+/* Meeting revision (To_Fix_Meeting_Instructions.pdf, item 2): the current route is
+   indicated by BOLD TEXT ONLY. The persistent accent underline/bar that used to sit
+   under the active item is removed — including its 4px padding, which existed only
+   to hold that rule off the baseline. The temporary hover letter-roll (.swap*) is a
+   separate interaction and is deliberately left intact, so a mouse-leave returns the
+   item to bold-with-no-underline. Keyboard focus still gets the UA focus ring. */
+.navLinkActive {
+  color: var(--ink);
+  font-weight: 700;
+}
+.navItem {
+  position: relative;
+  padding-bottom: 20px;
+  margin-bottom: -20px;
+}
+.caret {
+  font-size: 9px;
+}
+.dropdown {
+  position: absolute;
+  top: 28px;
+  background: #fff;
+  border: 1px solid var(--hairline);
+  border-radius: var(--radius);
+  box-shadow: 0 16px 32px rgba(23, 20, 15, 0.12);
+  min-width: 190px;
+  padding: 8px;
+  display: flex;
+  flex-direction: column;
+  z-index: 200;
+}
+.dropdownLeft {
+  left: -14px;
+}
+.dropdownRight {
+  right: -14px;
+  min-width: 150px;
+}
+.dropItem {
+  padding: 11px 14px;
+  font-size: 13.5px;
+  border-radius: var(--radius);
+  color: inherit;
+}
+.dropItem:hover {
+  background: #f5f5f5;
+}
+.dropItemActive {
+  font-weight: 600;
+}
+.langPill {
+  display: inline-flex;
+  align-items: center;
+  background: rgba(23, 20, 15, 0.06);
+  border-radius: 20px;
+  padding: 3px;
+}
+.langBtn {
+  font-family: var(--font-body);
+  font-size: 12px;
+  letter-spacing: 0.06em;
+  font-weight: 600;
+  border: none;
+  border-radius: 16px;
+  padding: 6px 15px;
+  cursor: pointer;
+  background: transparent;
+  color: var(--muted);
+  transition: background 0.2s, color 0.2s;
+}
+.langBtnActive {
+  background: var(--ink);
+  color: #ffffff;
+}
+
+/* ---------- shared type helpers ---------- */
+.eyebrow {
+  font-family: var(--font-display);
+  font-size: 12px;
+  letter-spacing: 0.24em;
+  font-weight: 600;
+  color: var(--accent);
+  text-transform: uppercase;
+}
+
+/* ---------- shared buttons / links ---------- */
+.arrowLink {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--ink);
+  transition: gap 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.arrowLink:hover {
+  gap: 18px;
+}
+.arrowLinkAccent {
+  border-bottom: 1.5px solid var(--accent);
+  padding-bottom: 5px;
+}
+.btnDark {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  background: var(--ink);
+  color: #fff;
+  padding: 16px 30px;
+  border-radius: var(--radius);
+  font-size: 14px;
+  font-weight: 600;
+  border: none;
+  cursor: pointer;
+  font-family: var(--font-body);
+  transition: gap 0.3s cubic-bezier(0.16, 1, 0.3, 1), background 0.25s;
+}
+.btnDark:hover {
+  gap: 18px;
+}
+.btnLight {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  background: #ffffff;
+  color: var(--ink);
+  padding: 16px 28px;
+  border-radius: var(--radius);
+  font-size: 14px;
+  font-weight: 600;
+  white-space: nowrap;
+  transition: gap 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.btnLight:hover {
+  gap: 18px;
+}
+
+/* ---------- dark CTA banner (X-PILE / AirDome / Story) ---------- */
+.ctaBanner {
+  background: var(--dark-bg);
+  color: #f1ede4;
+  border-radius: var(--radius);
+  padding: 64px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 40px;
+  flex-wrap: wrap;
+}
+.ctaBannerText {
+  font-family: var(--font-body);
+  font-size: clamp(22px, 2.6vw, 30px);
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  max-width: 560px;
+  word-break: keep-all;
+}
+
+/* ---------- footer ---------- */
+.footer {
+  background: var(--dark-bg);
+  color: #f1ede4;
+  padding: 80px 0 40px;
+}
+.footerInner {
+  /* The design runs the footer on a 1280px content line — wider than the 1168px
+     the body sections use. Every design reference that shows the footer rule
+     (2, 10, 16, 18, 24, 26) measures it at exactly 1280px, and the three footer
+     columns land at 468 / 1005.6 / 1406.8 at a 2216px viewport, which only a
+     1280px content box produces. 1392 = 1280 + the 2x56 padding (border-box), so
+     the content keeps its 56px gutter below 1392px instead of going edge-flush. */
+  max-width: 1392px;
+  margin: 0 auto;
+  padding: 0 56px;
+}
+.footerGrid {
+  display: grid;
+  grid-template-columns: 1.4fr 1fr 1fr;
+  gap: 60px;
+  padding-bottom: 60px;
+  border-bottom: 1px solid rgba(241, 237, 228, 0.12);
+}
+.footerBrand {
+  font-family: var(--font-body);
+  font-size: 22px;
+  /* The design leaves this at the font's own leading; without it the element
+     inherits Tailwind preflight's 1.5, which is 6.6px taller and pushes the
+     tagline down by the same amount (measured on 24.png / 26.png). */
+  line-height: normal;
+  font-weight: 600;
+  margin-bottom: 16px;
+}
+.footerTagline {
+  font-size: 13px;
+  line-height: 1.8;
+  color: rgba(241, 237, 228, 0.55);
+  max-width: 320px;
+  margin: 0;
+  white-space: pre-line;
+}
+.footerColLabel {
+  font-size: 12px;
+  letter-spacing: 0.1em;
+  color: rgba(241, 237, 228, 0.4);
+  margin-bottom: 18px;
+}
+.footerColLabelSpaced {
+  margin: 26px 0 18px;
+}
+.footerLinks {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  font-size: 14px;
+}
+.footerLinks a {
+  transition: color 0.2s;
+}
+.footerLinks a:hover {
+  color: #ffffff;
+}
+.footerText {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  font-size: 14px;
+  color: rgba(241, 237, 228, 0.8);
+}
+.footerAddress {
+  line-height: 1.7;
+}
+.footerCopy {
+  padding-top: 28px;
+  font-size: 12px;
+  color: rgba(241, 237, 228, 0.35);
+}
+
+/* ---------- desktop-only authored line break ----------
+   Confirmed corrections: 희원 asked for exact desktop break positions ("which word
+   comes immediately before the break") while keeping the current mobile version
+   untouched, so a break marked in the copy exists only above the site's single
+   900px breakpoint. Below it the <br> is removed and the sentence wraps naturally
+   again — the space in front of the marker is still in the copy, so the words stay
+   separated. Used via ProductPage's `withDesktopBreaks`. */
+.desktopBreak {
+  display: none;
+}
+@media (min-width: 901px) {
+  .desktopBreak {
+    display: inline;
+  }
+}
+
+/* ---------- responsive (single site-wide breakpoint) ---------- */
+@media (max-width: 900px) {
+  .header {
+    flex-wrap: wrap;
+    padding: 14px 20px;
+  }
+  .nav {
+    position: static;
+    transform: none;
+    order: 3;
+    width: 100%;
+    justify-content: center;
+    gap: 18px;
+    margin-top: 10px;
+    flex-wrap: wrap;
+  }
+  .ctaBanner {
+    padding: 40px 28px;
+  }
+}
+
+/* ---------- reduced motion ---------- */
+@media (prefers-reduced-motion: reduce) {
+  .reveal,
+  .featureReveal,
+  .statCol {
+    opacity: 1 !important;
+    transform: none !important;
+    transition: none !important;
+  }
+}
+
+/* ---------- navigation letter-roll (Design: [data-swap]) ----------
+   Each character is a clipped box with two stacked copies; on hover the top
+   rolls out upwards and the duplicate rolls in from below. Markup comes from
+   SwapText.tsx. Values transcribed from the Design's stylesheet. */
+.swap {
+  display: inline-flex;
+}
+.swapChar {
+  display: inline-block;
+  position: relative;
+  overflow: hidden;
+  vertical-align: top;
+  /* Preserves the width of space characters inside the inline-flex row. */
+  white-space: pre;
+}
+.swapA,
+.swapB {
+  display: inline-block;
+  transition: transform 600ms cubic-bezier(0.6, 0.05, 0.2, 0.95);
+}
+.swapB {
+  position: absolute;
+  left: 0;
+  top: 0;
+  transform: translateY(105%);
+}
+a:hover .swapA,
+a:focus-visible .swapA,
+button:hover .swapA,
+button:focus-visible .swapA {
+  transform: translateY(-105%);
+}
+a:hover .swapB,
+a:focus-visible .swapB,
+button:hover .swapB,
+button:focus-visible .swapB {
+  transform: translateY(0);
+}
+/* Hover does not exist on touch; without this the roll sticks after a tap. */
+@media (hover: none) {
+  a:hover .swapA,
+  button:hover .swapA { transform: none; }
+  a:hover .swapB,
+  button:hover .swapB { transform: translateY(105%); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .swapA,
+  .swapB { transition: none; }
+}
+
+/* ---------- flow button (Design: .flowbtn) ---------- */
+.flowBtn {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  border-radius: 100px;
+  border: 1.5px solid rgba(51, 51, 51, 0.4);
+  padding: 15px 34px;
+  font-size: 14px;
+  font-weight: 600;
+  color: #111111;
+  background: transparent;
+  font-family: inherit;
+  cursor: pointer;
+  transition:
+    border-color 600ms cubic-bezier(0.23, 1, 0.32, 1),
+    border-radius 600ms cubic-bezier(0.23, 1, 0.32, 1),
+    color 600ms cubic-bezier(0.23, 1, 0.32, 1);
+}
+.flowBtn:active {
+  transform: scale(0.95);
+}
+.fbArr {
+  position: absolute;
+  width: 16px;
+  height: 16px;
+  stroke: #111111;
+  fill: none;
+  z-index: 9;
+  transition:
+    left 800ms cubic-bezier(0.34, 1.56, 0.64, 1),
+    right 800ms cubic-bezier(0.34, 1.56, 0.64, 1),
+    stroke 800ms cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+.fbArrL {
+  left: -25%;
+}
+.fbArrR {
+  right: 16px;
+}
+.fbTxt {
+  position: relative;
+  z-index: 1;
+  transform: translateX(-12px);
+  transition: transform 800ms ease-out;
+  white-space: nowrap;
+}
+.fbCircle {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 16px;
+  height: 16px;
+  background: #111111;
+  border-radius: 50%;
+  opacity: 0;
+  transition:
+    width 800ms cubic-bezier(0.19, 1, 0.22, 1),
+    height 800ms cubic-bezier(0.19, 1, 0.22, 1),
+    opacity 800ms cubic-bezier(0.19, 1, 0.22, 1);
+}
+/* :focus-visible mirrors :hover so keyboard users get the same affordance. */
+.flowBtn:hover,
+.flowBtn:focus-visible {
+  border-color: transparent;
+  color: #ffffff;
+  border-radius: 12px;
+}
+.flowBtn:hover .fbTxt,
+.flowBtn:focus-visible .fbTxt {
+  transform: translateX(12px);
+}
+.flowBtn:hover .fbCircle,
+.flowBtn:focus-visible .fbCircle {
+  width: 340px;
+  height: 340px;
+  opacity: 1;
+}
+.flowBtn:hover .fbArrL,
+.flowBtn:focus-visible .fbArrL {
+  left: 16px;
+  stroke: #ffffff;
+}
+.flowBtn:hover .fbArrR,
+.flowBtn:focus-visible .fbArrR {
+  right: -25%;
+  stroke: #ffffff;
+}
+/* Dark band variant (Design: .flowbtn-dark) */
+.flowBtnDark {
+  border-color: rgba(241, 237, 228, 0.4);
+  color: #f1ede4;
+}
+.flowBtnDark .fbArr {
+  stroke: #f1ede4;
+}
+.flowBtnDark .fbCircle {
+  background: #f1ede4;
+}
+.flowBtnDark:hover,
+.flowBtnDark:focus-visible {
+  border-color: transparent;
+  color: #17140f;
+}
+.flowBtnDark:hover .fbArrL,
+.flowBtnDark:hover .fbArrR,
+.flowBtnDark:focus-visible .fbArrL,
+.flowBtnDark:focus-visible .fbArrR {
+  stroke: #17140f;
+}
+/* Driven by an ancestor rather than itself (Design: `.sol-band:hover .flowbtn`
+   — hovering anywhere on the Products Introduction band animates the button).
+   The trigger is a data attribute, not a class, because the ancestor lives in a
+   different CSS module and its hashed class name is not visible from here.
+   The Design's band variant is a span inside the anchor and uses a slightly
+   tighter pill: 12px/32px rather than the standalone button's 15px/34px. */
+.flowBtnParent {
+  padding: 12px 32px;
+  cursor: inherit;
+}
+[data-flow-hover]:hover .flowBtn,
+[data-flow-hover]:focus-visible .flowBtn {
+  border-color: transparent;
+  color: #ffffff;
+  border-radius: 12px;
+}
+[data-flow-hover]:hover .fbTxt,
+[data-flow-hover]:focus-visible .fbTxt {
+  transform: translateX(12px);
+}
+[data-flow-hover]:hover .fbCircle,
+[data-flow-hover]:focus-visible .fbCircle {
+  width: 340px;
+  height: 340px;
+  opacity: 1;
+}
+[data-flow-hover]:hover .fbArrL,
+[data-flow-hover]:focus-visible .fbArrL {
+  left: 16px;
+  stroke: #ffffff;
+}
+[data-flow-hover]:hover .fbArrR,
+[data-flow-hover]:focus-visible .fbArrR {
+  right: -25%;
+  stroke: #ffffff;
+}
+/* The animation layers must never intercept the anchor's clicks. */
+.fbCircle,
+.fbArr {
+  pointer-events: none;
+}
+@media (hover: none) {
+  [data-flow-hover]:hover .flowBtn {
+    border-color: rgba(51, 51, 51, 0.4);
+    color: #111111;
+    border-radius: 100px;
+  }
+  [data-flow-hover]:hover .fbTxt { transform: translateX(-12px); }
+  [data-flow-hover]:hover .fbCircle { width: 16px; height: 16px; opacity: 0; }
+  [data-flow-hover]:hover .fbArrL { left: -25%; stroke: #111111; }
+  [data-flow-hover]:hover .fbArrR { right: 16px; stroke: #111111; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .flowBtn,
+  .fbArr,
+  .fbTxt,
+  .fbCircle { transition-duration: 1ms; }
+  .flowBtn:active { transform: none; }
+}
+/* No sticky hover state after a tap on touch devices. */
+@media (hover: none) {
+  .flowBtn:hover {
+    border-color: rgba(51, 51, 51, 0.4);
+    color: #111111;
+    border-radius: 100px;
+  }
+  .flowBtn:hover .fbTxt { transform: translateX(-12px); }
+  .flowBtn:hover .fbCircle { width: 16px; height: 16px; opacity: 0; }
+  .flowBtn:hover .fbArrL { left: -25%; }
+  .flowBtn:hover .fbArrR { right: 16px; }
+  .flowBtnDark:hover { border-color: rgba(241, 237, 228, 0.4); color: #f1ede4; }
+}
+
+/* Submitting state for the shared flow button. */
+.flowBtnDisabled {
+  opacity: 0.6;
+  cursor: progress;
+  pointer-events: none;
+}

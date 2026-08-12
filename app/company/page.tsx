@@ -1,5 +1,5 @@
-import CompanyPage from "@/components/pages/CompanyPage";
+import StoryPage from "@/components/site/company/StoryPage";
 
 export default function Company() {
-  return <CompanyPage />;
+  return <StoryPage />;
 }

@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Jost } from "next/font/google";
 import "./globals.css";
 import { LanguageProvider } from "@/context/LanguageContext";
+import { displayFont } from "@/lib/fonts";
 
 // TODO: replace with the licensed "Glacial Indifference" webfont once available.
 // Jost is used as a clean geometric-sans fallback for Latin text in the meantime.
@@ -22,7 +23,13 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="ko" className={`${latinFont.variable} h-full antialiased`}>
+    // data-scroll-behavior opts into the smooth scrolling globals.css sets, and
+    // silences Next's route-transition warning about it.
+    <html
+      lang="ko"
+      data-scroll-behavior="smooth"
+      className={`${latinFont.variable} ${displayFont.variable} h-full antialiased`}
+    >
       <body className="min-h-full flex flex-col bg-cinapi-ivory text-cinapi-green">
         <LanguageProvider>{children}</LanguageProvider>
       </body>

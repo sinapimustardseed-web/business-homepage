@@ -1,0 +1,734 @@
+/* Shared X-PILE / AIR DOME product page. Chrome/tokens/feature-reveal/stat-col
+   come from site.module.css via SiteChrome; this module holds page layout.
+   Note: the source design left the feature/stat grids un-stacked on mobile
+   (would overflow); we restack them below 900/520px to prevent horizontal scroll. */
+
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(16px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* ---------- hero (shared frame) ---------- */
+.hero {
+  position: relative;
+  width: 100%;
+  min-height: 100vh;
+  overflow: hidden;
+  background: #ffffff;
+  color: var(--ink);
+  display: flex;
+  align-items: center;
+}
+.heroDomeBg {
+  background: radial-gradient(130% 130% at 32% 22%, #fcfcfc 0%, #ededed 46%, #d4d4d4 100%);
+}
+.heroInner {
+  position: relative;
+  z-index: 2;
+  /* Shared 1280px page container (same as .blockInner, .appsHead, .ctaSection and
+     the rest of the site). Sections previously used 1400/1240/1280, so their left
+     content edges sat 124px apart and drifted apart further as browser zoom changed. */
+  max-width: 1280px;
+  width: 100%;
+  margin: 0 auto;
+  padding: 0 56px;
+}
+.heroCopy {
+  /* 680px so each sentence of the hero description fits on one line at desktop
+     (longest line measures 655px). Font size and the hero image are unchanged. */
+  max-width: 680px;
+  animation: fadeUp 0.9s ease both;
+}
+/* Adjustments_needed pair 5 (Intro_X-PILE_Design_app.png): the wordmark and the CTA
+   label measure identically in the two screenshots, so the type is already right and
+   only the measure was off — the Design sets this paragraph in four long lines of
+   ~850px against the five that 680px produces. 860px reproduces all four Design line
+   endings ("sub-surface to", "four times greater", "foundation work,"), and the window
+   runs to ~863px before "it" climbs onto the third line.
+
+   Scoped to the X-PILE hero: the AIR DOME hero has no Design pair here, and its render
+   sits where the wider column would run.
+
+   The condition is measured, not guessed, because a wider column here can run the tail
+   of a line onto the dark pile. Two things have to hold at once.
+
+   Width: .heroOverlayXpile clears to fully transparent at 78% of the viewport, so on a
+   narrow desktop an 860px line ends on the bare photograph. Sampling the real background
+   behind the last 140px of each line and compositing this paragraph's rgba(23,20,15,0.72)
+   over it gives 2.04:1 at 1440px, 2.43:1 at 1460px and 3.01:1 at 1500px — below WCAG AA —
+   against 5.36:1 at 1560px and 5.38:1 at 1600px with nothing under 4.5:1.
+
+   Shape: .heroImgXpile is `object-fit: cover`, so once the viewport is shorter than about
+   16:10 the photo scales by height instead, and the pile shaft grows and travels left
+   while that gradient — fixed in percentages of width — does not follow it. Width alone
+   is therefore not enough: at 1600px the same 860px column measures 5.38:1 at 1600x900 but
+   2.30:1 at 1600x1090 and 2.71:1 at 1600x1200, and 1920px measures 5.59:1 at 1080 tall and
+   2.72:1 at 1440 tall. Every failing sample sits at a viewport ratio of 1.60 or below and
+   every passing one at 5/3 or above, with the narrowest passing case (1600x960, ratio
+   exactly 5/3) still at 5.39:1 — so the ratio bound carries real margin rather than
+   sitting on the edge of the measurement.
+
+   Outside either condition the column stays at 680px, which never drops below 6.08:1 at
+   any size tested. Korean is unaffected throughout: its lines are authored breaks, the
+   widest 655px. If the hero photograph or its gradient is ever changed, re-measure —
+   this bound describes that image, not a general rule. */
+@media (min-width: 1600px) and (min-aspect-ratio: 5/3) {
+  .hero:not(.heroDomeBg) .heroCopy {
+    max-width: 860px;
+  }
+}
+.modelLabel {
+  font-size: 13px;
+  letter-spacing: 0.14em;
+  color: var(--accent-deep);
+  font-weight: 600;
+  margin-bottom: 20px;
+}
+.heroTitle {
+  font-family: var(--font-body);
+  font-size: clamp(56px, 8.5vw, 116px);
+  font-weight: 700;
+  letter-spacing: -0.04em;
+  line-height: 0.94;
+  margin: 0 0 30px;
+}
+/* The design gives the two heroes different wordmark scales: X-PILE caps at 116px,
+   AIRDOME at 104px (it is a longer word on a narrower copy column). */
+.heroDomeBg .heroTitle {
+  font-size: clamp(52px, 8vw, 104px);
+}
+.heroDesc {
+  font-size: clamp(14px, 1.5vw, 16px);
+  line-height: 1.85;
+  color: rgba(23, 20, 15, 0.72);
+  margin: 0 0 38px;
+  white-space: pre-line;
+  word-break: keep-all;
+}
+/* From 1920px up, the AIR DOME render's left edge lands on the viewport centre —
+   exactly 586px into the 680px hero text column — so the Korean sentence's final
+   word ("구조물입니다.") ran 69px past it, onto the least-faded part of the render.
+   Capping just that paragraph at 580px lets the word wrap onto the next line and
+   stay inside the text column. Scoped to the AIR DOME hero, to Korean, and to
+   >=1920px, so X-PILE, English, and every narrower width are untouched. The image,
+   its position, the font and the wording are unchanged. */
+@media (min-width: 1920px) {
+  :global(html[lang="ko"]) .heroDomeBg .heroDesc {
+    max-width: 580px;
+  }
+}
+/* Hero CTA — the design uses the same outline pill (.flowbtn) as the Contact
+   submit button: transparent fill, 1.5px border, 100px radius, 15px/34px padding,
+   resolving on hover to a dark fill with a 12px radius. */
+.heroCta {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  padding: 15px 34px;
+  font-size: 14px;
+  font-weight: 600;
+  color: #111111;
+  background: transparent;
+  border: 1.5px solid rgba(51, 51, 51, 0.4);
+  border-radius: 100px;
+  transition:
+    background 0.6s cubic-bezier(0.23, 1, 0.32, 1),
+    border-color 0.6s cubic-bezier(0.23, 1, 0.32, 1),
+    border-radius 0.6s cubic-bezier(0.23, 1, 0.32, 1),
+    color 0.6s cubic-bezier(0.23, 1, 0.32, 1);
+}
+.heroCta:hover {
+  background: var(--ink);
+  border-color: transparent;
+  border-radius: 12px;
+  color: #ffffff;
+}
+.heroCta:active {
+  transform: scale(0.95);
+}
+
+/* X-PILE hero: full-bleed photo + left white gradient */
+.heroImgXpile {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  z-index: 0;
+  width: 108%;
+  height: 100%;
+}
+.heroImgXpile img {
+  object-fit: cover;
+  object-position: center right;
+}
+.heroOverlayXpile {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  /* Design stops: 0.96 → 0.82 at 48% → 0 at 78%. The white carries much further
+     right than the previous 0.7/34%/62% ramp, which is what kept the render darker
+     and more dominant than the reference behind the copy column. */
+  background: linear-gradient(90deg, rgba(255, 255, 255, 0.96) 0%, rgba(255, 255, 255, 0.82) 48%, rgba(255, 255, 255, 0) 78%);
+}
+
+/* AIR DOME hero: product render pinned right + left white gradient */
+.heroDomeMedia {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  /* Bounded and centred so the render stays part of the hero composition instead of
+     being pinned to the physical viewport edge when the browser is zoomed far out
+     (kept from the extreme-zoom pass). 1920px matches the reference desktop.
+     The inset is capped at its 1920px value: as a raw 2vw it kept growing past the
+     cap, sliding the right-aligned render further left on very wide viewports and
+     pushing it into the copy. Below 1920px this is still exactly 2vw, so every
+     normal desktop width — including the approved 1440px composition — is untouched. */
+  max-width: 1920px;
+  margin-inline: auto;
+  padding: 0 min(2vw, 38.4px);
+}
+.heroDomeImg {
+  width: 60%;
+  max-width: 920px;
+  height: auto;
+  object-fit: contain;
+  filter: drop-shadow(0 30px 60px rgba(23, 20, 15, 0.12));
+}
+.heroOverlayDome {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  background: linear-gradient(90deg, rgba(255, 255, 255, 0.97) 0%, rgba(255, 255, 255, 0.72) 36%, rgba(255, 255, 255, 0) 66%);
+}
+
+/* ---------- features / stats sections ---------- */
+.block {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 140px 0;
+  background: #ffffff;
+}
+.blockInner {
+  max-width: 1280px; /* shared page container — see .heroInner */
+  margin: 0 auto;
+  width: 100%;
+  /* Padding lives inside the 1280px box, matching .heroInner/.appsHead/.ctaSection,
+     so every section's content starts on the same line. */
+  padding: 0 56px;
+}
+.blockHead {
+  max-width: 840px;
+  margin-bottom: 96px;
+}
+/* Stats block: the English lead-in is a full sentence (needs 1175px at 34px) while
+   the container's content box is 1168px. Reclaiming the container's own 56px right
+   padding gives 1224px, so the sentence holds one line without moving the left edge,
+   changing the font, or widening the stats grid. Stays inside the 1280px box, so it
+   cannot overflow the page. Reset below 900px where that inset shrinks to 22px. */
+.blockHeadWide {
+  max-width: none;
+  width: calc(100% + 56px);
+}
+.lead {
+  font-family: var(--font-display);
+  /* 2.4vw (was 2.6vw) so the full-sentence lead-in still fits on one line at
+     1024px. The 34px desktop cap and the 20px floor are unchanged. */
+  font-size: clamp(20px, 2.4vw, 34px);
+  font-weight: 400;
+  line-height: 1.42;
+  letter-spacing: -0.01em;
+  color: rgba(23, 20, 15, 0.34);
+}
+/* Keeps the "X-PILE" brand token from splitting after its hyphen on narrow screens. */
+.brandToken {
+  white-space: nowrap;
+}
+.blockTitle {
+  font-family: var(--font-body);
+  font-size: clamp(28px, 3.8vw, 48px);
+  font-weight: 700;
+  line-height: 1.28;
+  letter-spacing: -0.025em;
+  color: var(--ink);
+  margin-top: 14px;
+  word-break: keep-all;
+}
+/* Feature cards — latest Claude Design treatment: the number and the title share one
+   baseline row, a 2px rule sits beneath that row, and the body follows. Each card is a
+   subgrid spanning the grid's two rows, so the heading rows share a track height and
+   every rule lands on the same line no matter how long a title runs. */
+.featuresGrid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  grid-template-rows: auto auto;
+  gap: 44px;
+  align-items: start;
+}
+.featuresGrid3 {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+.featureCard {
+  display: grid;
+  grid-row: span 2;
+  grid-template-rows: subgrid;
+  row-gap: 0;
+  text-align: left;
+  min-width: 0;
+}
+.featureHead {
+  display: flex;
+  /* Confirmed corrections (g -> h, i -> j): the number and title share a baseline, but
+     it has to be the title's LAST one. Aligning first baselines pushed every extra
+     title line below the number, and because the cards are a subgrid that dragged the
+     rule down on all four columns at once — 62px under the number's baseline instead
+     of the 22px screenshots h and j measure. Aligning last baselines lets a two-line
+     title grow upward into the space the number already occupies, so the rule stays
+     put no matter how long a title runs. `flex-end` first as the fallback for engines
+     without `last baseline` (Safari 15), where the effect is nearly identical. */
+  align-items: flex-end;
+  align-items: last baseline;
+  gap: 14px;
+  padding-bottom: 16px;
+  border-bottom: 2px solid rgba(23, 20, 15, 0.85);
+}
+.featureNum {
+  font-family: var(--font-body);
+  font-size: clamp(44px, 5.2vw, 72px);
+  font-weight: 800;
+  letter-spacing: -0.045em;
+  line-height: 0.9;
+  color: var(--ink);
+  flex: none; /* never let the number compress the title */
+}
+.featureTitle {
+  font-family: var(--font-body);
+  font-size: clamp(18px, 1.7vw, 24px);
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  color: var(--ink);
+  word-break: keep-all;
+  min-width: 0;
+}
+/* Confirmed corrections (i -> j): AIR DOME used to run its own larger scale here
+   (100px number / 35px title), which is what made "Powerful Bearing Capacity" run to
+   three lines and shove the rule far below the number. 희원 asked for one scale across
+   the two pages because they share the design, and screenshots h and j confirm it —
+   both render a 53px-tall number and a 17px title cap, i.e. the X-PILE values. So the
+   size overrides are gone and only the slightly wider gap the 3-column layout affords
+   remains. */
+.featuresGrid3 .featureHead {
+  gap: 18px;
+}
+/* Screenshot j breaks AIR DOME's first title after "Powerful", and the copy already
+   authors it that way ("Powerful\nBearing Capacity" — the only feature title in either
+   language carrying a break). Without pre-line that break was dropped and Chrome wrapped
+   after "Bearing" instead, so the delivered break word did not match the target. Honoured
+   above the 900px breakpoint only: on mobile the title fits one line today and forcing the
+   break there would change the current mobile version. Titles without an authored break
+   are unaffected — pre-line still wraps them normally. */
+@media (min-width: 901px) {
+  .featureTitle {
+    white-space: pre-line;
+  }
+}
+.featureBody {
+  font-size: 16px;
+  color: #57534a;
+  line-height: 1.7;
+  text-wrap: pretty;
+  word-break: keep-all;
+  margin-top: 18px;
+  /* Content supplies the intentional line breaks (see content/*.ts). */
+  white-space: pre-line;
+}
+
+.statsGrid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  grid-template-rows: auto auto;
+  gap: 44px;
+  align-items: start;
+}
+/* The design centres each statistic inside its column and makes the column a
+   subgrid, so every label sits on one shared baseline no matter how tall the
+   number row is. Sizes are unchanged. */
+.statItem {
+  display: grid;
+  grid-row: span 2;
+  grid-template-rows: subgrid;
+  row-gap: 0;
+  justify-items: center;
+  text-align: center;
+  min-width: 0;
+}
+.statNumRow {
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  gap: 3px;
+  line-height: 0.82;
+}
+.statNum {
+  font-family: var(--font-body);
+  font-size: clamp(60px, 8.2vw, 120px);
+  font-weight: 800;
+  letter-spacing: -0.045em;
+  color: var(--ink);
+}
+.statSuffix {
+  font-family: var(--font-body);
+  font-size: clamp(20px, 2vw, 30px);
+  font-weight: 700;
+  color: var(--ink);
+  padding-bottom: 0.42em;
+  white-space: pre;
+}
+.statLabel {
+  margin-top: 26px;
+  font-size: 15px;
+  line-height: 1.55;
+  color: #57534a;
+  word-break: keep-all;
+}
+
+/* ---------- applications (horizontal scroll cards) ---------- */
+/* Applications — scroll-pinned rail (Claude Design: 320vh pin + sticky 100vh
+   stage). The tall section is the scroll distance the pin consumes; the stage
+   sticks to the viewport while page scroll drives the rail sideways. */
+.appsPin {
+  position: relative;
+  height: 320vh;
+  background: #ffffff;
+}
+.appsStage {
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  /* `clip` keeps the full-bleed rail from widening the page; unlike `hidden` it
+     does not create a scroll container, so the sticky positioning survives. */
+  overflow-x: clip;
+  padding: clamp(20px, 5vh, 60px) 0;
+}
+.appsHead {
+  max-width: 1280px; /* shared page container — see .heroInner */
+  margin: 0 auto clamp(48px, 7vh, 80px);
+  padding: 0 56px;
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 24px;
+}
+.appsLabel {
+  font-family: var(--font-display);
+  font-size: 12px;
+  letter-spacing: 0.28em;
+  font-weight: 600;
+  color: var(--accent);
+  text-transform: uppercase;
+  margin-bottom: 20px;
+}
+.appsTitle {
+  font-family: var(--font-body);
+  font-size: clamp(30px, 4.4vw, 58px);
+  font-weight: 700;
+  letter-spacing: -0.03em;
+  line-height: 1.1;
+  margin: 0;
+  color: var(--ink);
+  word-break: keep-all;
+}
+.appsCount {
+  font-family: var(--font-display);
+  font-size: 12px;
+  letter-spacing: 0.14em;
+  font-weight: 600;
+  color: rgba(23, 20, 15, 0.4);
+  white-space: nowrap;
+  padding-bottom: 8px;
+}
+.appScroll {
+  display: flex;
+  gap: 24px;
+  overflow-x: auto;
+  /* Meeting revision (item 3): the run-in before the first card is the page gutter,
+     not the centred container's left edge.
+
+     This used to be max(56px, calc((100% - 1280px) / 2 + 56px)) so the first card
+     lined up under the applications heading. That term grows with the viewport —
+     369px at 1920 and ~520px at 2216 — and it is the ONE non-periodic stretch of the
+     loop, so entering the section opened on a blank band that scale, which never
+     reappeared once the rail had wrapped. Resolving it to the same 56px gutter the
+     heading, hero and every block already use (22px below 900px, see the media
+     query) keeps deliberate breathing room at the page edge, is responsive by
+     construction rather than tuned to one width, and leaves the narrowest desktops
+     untouched — at or below ~1295px the old expression already resolved to 56px, and
+     between there and 1920 it grew through ~91px (1366) and ~129px (1440).
+
+     The 24px card gap and therefore the last -> first seam are unchanged; the rail's
+     JS reads this padding back through getComputedStyle, so the loop period, the
+     fold ceiling and the pinned travel all follow automatically. */
+  padding: 6px 56px 30px;
+  /* No scroll-snap and no smooth scrolling on this rail: both fight the
+     per-frame programmatic writes from the pin sync, autoplay and drag. The
+     global `scroll-behavior: smooth` would animate every frame's assignment. */
+  scroll-behavior: auto;
+  overscroll-behavior-x: contain;
+}
+/* The duplicated set is laid out as if its cards were direct flex children. */
+.appLoopCopy {
+  display: contents;
+}
+.appScrollDragging {
+  cursor: grabbing;
+  user-select: none;
+}
+.appScrollDragging .appImg {
+  transition: none;
+}
+.appScroll::-webkit-scrollbar {
+  height: 6px;
+}
+.appScroll::-webkit-scrollbar-track {
+  background: rgba(23, 20, 15, 0.05);
+  border-radius: 3px;
+}
+.appScroll::-webkit-scrollbar-thumb {
+  background: rgba(23, 20, 15, 0.2);
+  border-radius: 3px;
+}
+.appCard {
+  flex: 0 0 clamp(280px, 25vw, 352px);
+}
+.appImgBox {
+  position: relative;
+  aspect-ratio: 4 / 3;
+  border-radius: 12px;
+  overflow: hidden;
+  background: #f4f4f5;
+  margin-bottom: 26px;
+}
+.appImg {
+  object-fit: cover;
+  transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.appCard:hover .appImg {
+  transform: scale(1.06);
+}
+.appCategory {
+  font-family: var(--font-display);
+  font-size: 12px;
+  letter-spacing: 0.08em;
+  font-weight: 600;
+  color: var(--accent);
+  margin-bottom: 14px;
+}
+.appNameRow {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+  margin-bottom: 14px;
+}
+.appName {
+  font-family: var(--font-body);
+  font-size: clamp(24px, 2.4vw, 30px);
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  line-height: 1;
+  margin: 0;
+  color: var(--ink);
+  word-break: keep-all;
+}
+.appSub {
+  font-size: 14px;
+  color: rgba(23, 20, 15, 0.42);
+  font-weight: 500;
+}
+.appDesc {
+  font-size: 14.5px;
+  line-height: 1.7;
+  color: #57534a;
+  margin: 0 0 20px;
+  min-height: 50px;
+  text-wrap: pretty;
+  word-break: keep-all;
+}
+.appChips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.appChip {
+  font-size: 12.5px;
+  font-weight: 600;
+  color: var(--ink);
+  background: rgba(23, 20, 15, 0.05);
+  padding: 7px 13px;
+  border-radius: 100px;
+}
+
+/* ---------- CTA banner ---------- */
+.ctaSection {
+  padding: 0 56px 140px;
+  max-width: 1280px;
+  margin: 0 auto;
+}
+.ctaBanner {
+  background: var(--dark-bg);
+  color: #f1ede4;
+  border-radius: var(--radius);
+  padding: 64px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 40px;
+  flex-wrap: wrap;
+}
+.ctaText {
+  font-family: var(--font-body);
+  font-size: clamp(22px, 2.6vw, 30px);
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  /* Adjustments_needed pair 7 (Product_AIRDOME_Design_app.png): the Design banner is
+     176px tall against this page's 218px — one line of copy rather than two. The AIR
+     DOME sentence needs 748px at its 30px desktop size, so 720px broke "AIRDOME." onto
+     a line of its own. 800px holds it and is the same measure the Company box already
+     uses, which is the shared value for these three boxes. X-PILE's sentence is 547px
+     and unchanged; the button keeps its full width inside the 1040px banner. */
+  max-width: 800px;
+  word-break: keep-all;
+}
+.ctaBtn {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  background: #ffffff;
+  color: var(--ink);
+  padding: 16px 28px;
+  border-radius: var(--radius);
+  font-size: 14px;
+  font-weight: 600;
+  white-space: nowrap;
+  transition: gap 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.ctaBtn:hover {
+  gap: 18px;
+}
+
+/* ---------- responsive ---------- */
+@media (max-width: 900px) {
+  .hero {
+    padding-left: 22px;
+    padding-right: 22px;
+  }
+  .heroInner {
+    padding: 0 22px;
+  }
+  .blockInner {
+    padding-left: 22px;
+    padding-right: 22px;
+  }
+  .blockHeadWide {
+    width: 100%;
+  }
+  .block {
+    min-height: auto;
+    padding-top: 100px;
+    padding-bottom: 100px;
+  }
+  .blockHead {
+    margin-bottom: 56px;
+  }
+  .featuresGrid,
+  .featuresGrid3 {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 32px;
+  }
+  .statsGrid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 32px;
+  }
+  .heroDesc {
+    white-space: pre-line;
+  }
+  .heroDomeImg {
+    width: 92%;
+    opacity: 0.5;
+  }
+  /* Pinning a 320vh section on a phone traps the page scroll, so below 900px
+     (the Design's own breakpoint) the section becomes a normal block and the
+     rail falls back to native swipe + idle autoplay. ApplicationsRail checks
+     the same width before computing pinned progress. */
+  .appsPin {
+    height: auto;
+    padding: 100px 0 110px;
+  }
+  .appsStage {
+    position: static;
+    height: auto;
+    padding: 0;
+  }
+  .appsHead {
+    padding-left: 22px;
+    padding-right: 22px;
+  }
+  .appScroll {
+    padding-left: 22px;
+    padding-right: 22px;
+  }
+  .ctaSection {
+    padding-left: 22px;
+    padding-right: 22px;
+  }
+  .ctaBanner {
+    padding: 40px 28px;
+  }
+}
+@media (max-width: 520px) {
+  .featuresGrid,
+  .featuresGrid3 {
+    grid-template-columns: 1fr;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .heroCopy {
+    animation: none !important;
+  }
+  .appImg {
+    transition: none !important;
+  }
+  /* Autoplay is already disabled in JS. Drop the pin too: a 320vh sticky
+     section is a large involuntary translation. The rail stays manually
+     scrollable, and the section reads as an ordinary block. */
+  .appsPin {
+    height: auto;
+    padding: 140px 0 150px;
+  }
+  .appsStage {
+    position: static;
+    height: auto;
+    padding: 0;
+  }
+}
+
+/* Very wide viewports fit every card, so the Design's progress mapping yields
+   no horizontal travel. Pinning for 320vh there would stick the section while
+   nothing moves, so ApplicationsRail flags it and the pin is dropped; idle
+   autoplay still runs. */
+.appsPin[data-no-travel] {
+  height: auto;
+  padding: 140px 0 150px;
+}
+.appsPin[data-no-travel] .appsStage {
+  position: static;
+  height: auto;
+  padding: 0;
+}

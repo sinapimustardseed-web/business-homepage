@@ -1,5 +1,5 @@
-import ProductsPage from "@/components/pages/ProductsPage";
+import ProductsIntroPage from "@/components/site/products/ProductsIntroPage";
 
 export default function Products() {
-  return <ProductsPage />;
+  return <ProductsIntroPage />;
 }

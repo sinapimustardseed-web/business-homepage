@@ -1,0 +1,318 @@
+/* /contact — Contact.dc.html (intro + form + info panel). Local-state form. */
+
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(16px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.intro {
+  position: relative;
+  padding: 180px 56px 60px;
+  overflow: hidden;
+}
+.introInner {
+  position: relative;
+  z-index: 2;
+  max-width: 760px;
+  margin: 0 auto;
+  text-align: center;
+  animation: fadeUp 0.8s ease both;
+}
+.kickerRow {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  margin-bottom: 26px;
+}
+.kicker {
+  font-size: 12px;
+  letter-spacing: 0.14em;
+  color: var(--accent-deep);
+  font-weight: 600;
+}
+.kickerLine {
+  width: 26px;
+  height: 1px;
+  background: var(--accent);
+}
+.title {
+  font-family: var(--font-body);
+  font-size: clamp(20px, 2.8vw, 32px);
+  line-height: 1.2;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  margin: 0 0 16px;
+  color: var(--ink);
+  word-break: keep-all;
+}
+.body {
+  font-size: 13px;
+  line-height: 1.75;
+  color: #57534a;
+  /* 580px is the design's measure — 20px more than before, which is exactly what
+     the Korean subtitle needs to hold one line instead of wrapping. */
+  max-width: 580px;
+  margin: 0 auto;
+  word-break: keep-all;
+}
+
+.grid {
+  padding: 60px 56px 140px;
+  max-width: 1280px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  /* Column gap unchanged at 72px, so both column widths stay exactly as they
+     were. The row gap matches the form's own 22px field gap, so the pill keeps
+     the exact vertical position it had as the form's last child (y = 940.1 at a
+     2216px viewport, before and after). */
+  column-gap: 72px;
+  row-gap: 22px;
+}
+/* Source order is form -> submit -> info so that keyboard order stays
+   fields -> submit, and so the single-column layout below 900px keeps today's
+   form -> button -> information order without any reordering. */
+.infoCol {
+  order: 2;
+}
+.submitRow {
+  order: 3;
+  grid-column: 1 / -1;
+  display: flex;
+  justify-content: center;
+}
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 22px;
+}
+.fieldLabel {
+  display: block;
+  font-size: 12.5px;
+  font-weight: 600;
+  color: #57534a;
+  margin-bottom: 8px;
+}
+.input,
+.textarea {
+  width: 100%;
+  padding: 14px 16px;
+  border: 1px solid rgba(23, 20, 15, 0.15);
+  border-radius: var(--radius);
+  font-size: 14px;
+  background: #fff;
+  box-sizing: border-box;
+  font-family: var(--font-body);
+  color: var(--ink);
+}
+.input::placeholder,
+.textarea::placeholder {
+  color: #9a948a;
+}
+.input:focus,
+.textarea:focus {
+  outline: none;
+  border-color: var(--accent);
+}
+.textarea {
+  resize: vertical;
+}
+/* Contact CTA — matched to the approved Claude Design contact button (.flowbtn):
+   outline pill, transparent fill, 1.5px border, 100px radius, 15px/34px padding,
+   centred label with the arrow alongside. Hover resolves to the design's filled
+   end state (dark fill, white text, 12px radius). Contact page only — the home
+   form uses its own .submitBtn in home.module.css. */
+.submitBtn {
+  margin-top: 8px;
+  /* Centring is done by .submitRow, which spans the whole grid — the design
+     centres this pill on the section, not on the form column. */
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  background: transparent;
+  color: #111111;
+  padding: 15px 34px;
+  border: 1.5px solid rgba(51, 51, 51, 0.4);
+  border-radius: 100px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  font-family: var(--font-body);
+  transition:
+    background 0.6s cubic-bezier(0.23, 1, 0.32, 1),
+    border-color 0.6s cubic-bezier(0.23, 1, 0.32, 1),
+    border-radius 0.6s cubic-bezier(0.23, 1, 0.32, 1),
+    color 0.6s cubic-bezier(0.23, 1, 0.32, 1);
+}
+.submitBtn:hover {
+  background: var(--ink);
+  border-color: transparent;
+  border-radius: 12px;
+  color: #ffffff;
+}
+.submitBtn:active {
+  transform: scale(0.95);
+}
+.thanks {
+  border: 1px solid rgba(23, 20, 15, 0.12);
+  padding: 48px;
+  text-align: left;
+  background: #efece3;
+  border-radius: var(--radius);
+}
+.thanksTitle {
+  font-family: var(--font-body);
+  font-size: 22px;
+  font-weight: 600;
+  margin-bottom: 12px;
+  color: var(--ink);
+}
+.thanksBody {
+  font-size: 14px;
+  line-height: 1.8;
+  color: #57534a;
+  margin: 0;
+}
+
+.info {
+  border-left: 1px solid rgba(23, 20, 15, 0.12);
+  padding-left: 48px;
+  display: flex;
+  flex-direction: column;
+  gap: 36px;
+}
+.infoLabel {
+  font-size: 12px;
+  letter-spacing: 0.1em;
+  color: var(--accent-deep);
+  font-weight: 600;
+  margin-bottom: 12px;
+}
+.infoEmail {
+  font-family: var(--font-body);
+  font-size: 20px;
+  font-weight: 600;
+}
+.infoAddress {
+  font-size: 15px;
+  line-height: 1.8;
+  color: var(--ink);
+  white-space: pre-line;
+  word-break: keep-all;
+}
+.mapWrap {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.mapCanvas {
+  height: 240px;
+  width: 100%;
+  border: 0;
+  border-radius: var(--radius);
+  overflow: hidden;
+  background: #efece3;
+  display: block;
+}
+.mapFallback {
+  height: 240px;
+  width: 100%;
+  box-sizing: border-box;
+  border-radius: var(--radius);
+  background: #efece3;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: center;
+  gap: 10px;
+  padding: 24px;
+}
+.mapFallbackNote {
+  font-size: 13px;
+  line-height: 1.6;
+  color: #9a948a;
+  margin: 0;
+}
+.mapLink {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  align-self: flex-start;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--accent-deep);
+  transition: gap 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.mapLink:hover {
+  gap: 12px;
+}
+.mapLink:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
+  border-radius: 2px;
+}
+
+@media (max-width: 900px) {
+  .intro {
+    padding: 140px 22px 40px;
+  }
+  .grid {
+    grid-template-columns: 1fr;
+    column-gap: 48px;
+    /* 22px + the button's 8px margin reproduces the 30px that used to sit
+       between the textarea and the button inside the form. */
+    row-gap: 22px;
+    padding: 40px 22px 100px;
+  }
+  /* Single column: fall back to source order, i.e. form -> button -> information. */
+  .infoCol,
+  .submitRow {
+    order: 0;
+    grid-column: auto;
+  }
+  /* Restores the 48px that previously separated the form block from the
+     information column. */
+  .submitRow {
+    margin-bottom: 26px;
+  }
+  .info {
+    border-left: none;
+    padding-left: 0;
+  }
+  .submitBtn {
+    width: 100%;
+    justify-content: center;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .introInner {
+    animation: none !important;
+  }
+}
+
+/* Honeypot: removed from view and from the a11y tree, but still a real input a
+   bot will fill. Not display:none — some bots skip those. */
+.honeypot {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+.formError {
+  margin: 14px 0 0;
+  font-size: 13.5px;
+  line-height: 1.6;
+  color: #b3261e;
+  text-align: center;
+}
+
+/* The thank-you panel takes focus so screen readers announce it; give it the
+   site's own focus treatment rather than the raw UA outline. */
+.thanks:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
+}

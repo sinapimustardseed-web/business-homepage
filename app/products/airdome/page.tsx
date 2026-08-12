@@ -1,5 +1,5 @@
-import AirDomePage from "@/components/pages/AirDomePage";
+import ProductPage from "@/components/site/products/ProductPage";
 
 export default function AirDome() {
-  return <AirDomePage />;
+  return <ProductPage variant="airdome" />;
 }

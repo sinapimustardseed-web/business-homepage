@@ -1,5 +1,5 @@
-import XPilePage from "@/components/pages/XPilePage";
+import ProductPage from "@/components/site/products/ProductPage";
 
 export default function XPile() {
-  return <XPilePage />;
+  return <ProductPage variant="xpile" />;
 }

@@ -1,0 +1,539 @@
+/* /company — Story.dc.html (image heroes + scroll-reveal narrative). */
+
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+@keyframes slowZoom {
+  from { transform: scale(1.08); }
+  to { transform: scale(1); }
+}
+
+/* ---------- hero ---------- */
+.hero {
+  position: relative;
+  min-height: 100vh;
+  display: flex;
+  align-items: flex-end;
+  overflow: hidden;
+}
+.heroBg {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+}
+.heroImg {
+  object-fit: cover;
+  animation: slowZoom 2.4s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+.heroGradient {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, rgba(23, 20, 15, 0.28) 0%, rgba(23, 20, 15, 0.08) 40%, rgba(23, 20, 15, 0.78) 100%);
+}
+.heroInner {
+  position: relative;
+  z-index: 2;
+  width: 100%;
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 0 56px 96px;
+  color: #f7f4ee;
+}
+.heroKickerRow {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 26px;
+  animation: fadeUp 0.8s ease 0.1s both;
+}
+.heroKicker {
+  font-size: 12px;
+  letter-spacing: 0.16em;
+  font-weight: 600;
+  color: rgba(247, 244, 238, 0.85);
+}
+.heroKickerLine {
+  width: 30px;
+  height: 1px;
+  background: rgba(247, 244, 238, 0.6);
+}
+.heroTitle {
+  font-family: var(--font-body);
+  font-size: clamp(34px, 5.4vw, 68px);
+  line-height: 1.16;
+  font-weight: 700;
+  letter-spacing: -0.025em;
+  margin: 0;
+  white-space: pre-line;
+  animation: fadeUp 0.9s ease 0.2s both;
+}
+.heroSub {
+  font-size: clamp(15px, 1.9vw, 20px);
+  line-height: 1.6;
+  font-weight: 400;
+  color: rgba(247, 244, 238, 0.82);
+  margin: 26px 0 0;
+  /* Confirmed corrections (k -> l): screenshot l keeps the whole sub-heading on one
+     line. The English sentence measures 652px at its 20px desktop size, so the old
+     560px stranded "on concrete." underneath; 680px holds it while staying far inside
+     the 1168px hero column. Korean measures 468px and is unchanged either way, and on
+     mobile the hero's own 22px gutters bound the line long before this does. */
+  max-width: 680px;
+  animation: fadeUp 1s ease 0.35s both;
+  word-break: keep-all;
+}
+
+/* ---------- one section, one screen (confirmed corrections q -> r, s -> t) ----------
+   희원 confirmed X-PILE and AIR DOME already behave correctly and are the reference,
+   and that only Company needed fixing. On those pages every snap section is already a
+   full viewport (`.hero`, `.block` and the pinned rail in productPage.module.css), so
+   the snap hook always lands on a section that exactly fills the screen and nothing
+   from the neighbours can show. Company's narrative bands were sized by their content
+   instead — 713px, 792px, and a 92vh direction band — so at common desktop heights the
+   hook seated a short section mid-screen and the dark philosophy image above and the
+   CTA below leaked into it, which is exactly what screenshots q and s show.
+
+   Giving these four sections the same `min-height: 100vh` closes it without touching
+   useSectionSnap, the wheel handling, or either product page: a section that is at
+   least a viewport tall takes the hook's top-aligned branch, so it starts at the top of
+   the screen and no adjacent section is ever in frame. Where content already exceeds a
+   viewport (the question band, or the split at 1024x768) the height is unchanged and so
+   is today's behaviour. `.cta` is deliberately left alone — it is the counterpart of
+   the product pages' `.ctaSection`, which 희원 approved as-is.
+
+   Every rule here is reset in the max-width: 900px block at the end of this file, so the
+   mobile page keeps its current flow — the same way `.block` does on the product pages. */
+
+/* ---------- the question ---------- */
+.question {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 150px 56px;
+  background: #f6f4ee;
+}
+.questionInner {
+  max-width: 900px;
+  margin: 0 auto;
+  text-align: center;
+}
+.questionKicker {
+  font-size: 12px;
+  letter-spacing: 0.16em;
+  color: var(--accent-deep);
+  font-weight: 600;
+  margin-bottom: 30px;
+}
+.questionBody {
+  font-size: clamp(16px, 1.9vw, 19px);
+  line-height: 1.95;
+  color: #4a463d;
+  font-weight: 400;
+  margin: 0 auto 56px;
+  /* Meeting revision (item 5, layout C -> D): at 680px the two longest sentences
+     (835px and 778px of ink at 19px) wrapped, stranding "공정은 전부 멈춰 있습니다."
+     and "여겨져 왔습니다." on fragment lines — layout C. Letting the body use the full
+     900px .questionInner already affords gives every sentence its own line, which is
+     layout D. 900px is what both languages need, not a Korean-only number: Korean's
+     longest authored line measures 835px and English's 895px, so an intermediate
+     880px fixed Korean but left English orphaning a 62px fragment. The copy, the \n
+     paragraph grouping, the heading, the centring and the rest of the section are
+     untouched; below ~1012px the container bounds the measure and the text wraps
+     naturally again. */
+  max-width: 900px;
+  white-space: pre-line;
+  text-wrap: pretty;
+  word-break: keep-all;
+}
+.questionBar {
+  width: 1px;
+  height: 52px;
+  background: var(--accent);
+  margin: 0 auto 40px;
+}
+/* Typography fitted against 21.png at a 2204px canvas: the design's two quote
+   lines measure 595px and 433px of ink with an 83px baseline pitch. 46px with
+   +0.02em tracking and 1.8 leading reproduces all four numbers exactly; the
+   previous -0.02em/1.34 gave 563px / 411px / 58px. Glyph ink widths were already
+   identical, so the size itself was never wrong — only the tracking sign and the
+   leading. */
+.questionQuote {
+  font-family: var(--font-body);
+  font-size: clamp(26px, 3.8vw, 46px);
+  line-height: 1.8;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  color: var(--ink);
+  margin: 0;
+  white-space: pre-line;
+  text-wrap: balance;
+  word-break: keep-all;
+}
+
+/* ---------- philosophy (dark split) ---------- */
+.philosophy {
+  position: relative;
+  min-height: 100vh;
+  /* The split has to stretch with the section, or filling the viewport would leave a
+     band of bare --dark-bg under the image column. */
+  display: flex;
+  flex-direction: column;
+  background: var(--dark-bg);
+  color: #f1ede4;
+  overflow: hidden;
+}
+.twoCol {
+  flex: 1 1 auto;
+  /* The design runs this split full-bleed rather than inside a 1400px box, so the
+     image and copy each take an exact half of the viewport. */
+  width: 100%;
+  margin: 0;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  align-items: stretch;
+}
+.philoImgWrap {
+  position: relative;
+  min-height: 560px;
+  overflow: hidden;
+}
+.philoImg {
+  object-fit: cover;
+}
+.philoImgGradient {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(90deg, rgba(23, 20, 15, 0) 60%, rgba(23, 20, 15, 0.9) 100%);
+}
+.philoCopy {
+  padding: 110px clamp(36px, 4vw, 64px);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+.philoKicker {
+  font-size: 12px;
+  letter-spacing: 0.16em;
+  color: var(--accent);
+  font-weight: 600;
+  margin-bottom: 28px;
+}
+.philoTitle {
+  font-family: var(--font-body);
+  font-size: clamp(26px, 3.2vw, 40px);
+  line-height: 1.3;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  margin: 0 0 30px;
+  white-space: pre-line;
+  word-break: keep-all;
+}
+.philoBody {
+  font-size: clamp(14.5px, 1.6vw, 16px);
+  line-height: 1.95;
+  color: rgba(241, 237, 228, 0.7);
+  margin: 0 0 34px;
+  /* Adjustments_needed pair 2 (Company_Our_TECHNOLOGY_Design_app.png): heading, the
+     Proven Structure block and its body all measure identically in the two
+     screenshots, so the type scale is already right and only the measure was off.
+     620px let "from" join the second line and "none" the fourth; the Design ends
+     those lines on "rather than" and "no cement means". The break positions swap at
+     596px and again at 604px, so 600px sits in the middle of the window that
+     reproduces the Design exactly, with 4px of slack either way. Korean is well
+     inside this at 553px, and below 900px the section's own gutters bound the
+     measure instead. */
+  max-width: 600px;
+  white-space: pre-line;
+  word-break: keep-all;
+}
+.philoTerm {
+  border-left: 2px solid var(--accent);
+  padding-left: 22px;
+}
+.philoTermLabel {
+  font-family: var(--font-body);
+  font-size: 25px;
+  /* Design leading, not the inherited 1.5. Measured on 22.png: label ink to
+     term-body ink is 41px in the design and was 46px here. */
+  line-height: normal;
+  font-weight: 800;
+  margin-bottom: 8px;
+}
+.philoTermBody {
+  font-size: 14.5px;
+  line-height: 1.85;
+  color: rgba(241, 237, 228, 0.7);
+  margin: 0;
+  word-break: keep-all;
+  /* Content supplies the intentional line breaks (see content/*.ts). */
+  white-space: pre-line;
+}
+
+/* ---------- three attitudes ---------- */
+.attitudes {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 150px 56px;
+  background: #ffffff;
+}
+.attitudesInner {
+  max-width: 1280px;
+  margin: 0 auto;
+}
+.attitudesHead {
+  text-align: center;
+  margin-bottom: 80px;
+}
+/* Design leading on both, not the inherited 1.5. Measured on 22.png: the kicker
+   ink sits 159px above the card grid's top rule in the design and sat 173px
+   above it here; 14.4px + 48px of line box instead of 18px + 60px closes it. */
+.attitudeKicker {
+  font-size: 12px;
+  line-height: normal;
+  letter-spacing: 0.16em;
+  color: var(--accent-deep);
+  font-weight: 600;
+  margin-bottom: 18px;
+}
+.attitudeTitle {
+  font-family: var(--font-body);
+  font-size: clamp(26px, 3.2vw, 40px);
+  line-height: normal;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  margin: 0;
+  word-break: keep-all;
+}
+.attitudeGrid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1px;
+  background: rgba(23, 20, 15, 0.1);
+  border: 1px solid rgba(23, 20, 15, 0.1);
+}
+.attitudeCell {
+  background: #ffffff;
+  padding: 56px 44px;
+  display: flex;
+  flex-direction: column;
+}
+/* Design scale: 50px number / 35px title. Capped clamps rather than the design's
+   fixed sizes, because the 3-column grid persists down to 900px where a hard 35px
+   Korean title would overflow its 174px content box. Both reach the design value
+   at desktop widths (>=1282px / >=1250px). */
+.attitudeNum {
+  font-family: var(--font-body);
+  font-size: clamp(40px, 3.9vw, 50px);
+  font-weight: 700;
+  color: var(--accent);
+  letter-spacing: -0.02em;
+  line-height: 1;
+  margin-bottom: 28px;
+}
+.attitudeCellTitle {
+  font-family: var(--font-body);
+  font-size: clamp(24px, 2.8vw, 35px);
+  /* Design leading. This alone takes the card height from 313.6px to 303.1px,
+     which is the design's measured 303px card (22.png). */
+  line-height: normal;
+  font-weight: 700;
+  margin-bottom: 16px;
+  letter-spacing: -0.01em;
+  word-break: keep-all;
+}
+.attitudeCellBody {
+  font-size: 14.5px;
+  line-height: 1.9;
+  color: #57534a;
+  margin: 0;
+  text-wrap: pretty;
+  word-break: keep-all;
+  /* Content supplies the intentional line breaks (see content/*.ts). */
+  white-space: pre-line;
+}
+
+/* ---------- direction ---------- */
+.direction {
+  position: relative;
+  /* 92vh left the remaining 8vh of the screen to the CTA band below, which is the
+     pale strip screenshot s marks; a full viewport is what screenshot t shows. */
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  overflow: hidden;
+}
+.dirBg {
+  position: absolute;
+  inset: 0;
+}
+.dirImg {
+  object-fit: cover;
+}
+.dirGradient {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, rgba(23, 20, 15, 0.5) 0%, rgba(23, 20, 15, 0.35) 50%, rgba(23, 20, 15, 0.72) 100%);
+}
+.dirInner {
+  position: relative;
+  z-index: 2;
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 0 56px;
+  color: #f7f4ee;
+  width: 100%;
+}
+.dirKicker {
+  font-size: 12px;
+  letter-spacing: 0.16em;
+  color: rgba(247, 244, 238, 0.85);
+  font-weight: 600;
+  margin-bottom: 30px;
+}
+.dirTitle {
+  font-family: var(--font-body);
+  font-size: clamp(28px, 4vw, 50px);
+  line-height: 1.28;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  margin: 0 0 30px;
+  /* Confirmed corrections (m -> n): screenshot n runs the heading on a single line.
+     English needs 963px at its 50px desktop size, so 860px broke "structure." off on
+     its own; 980px holds it and still fits the 1168px content column. Korean is 414px
+     and unaffected. */
+  max-width: 980px;
+  white-space: pre-line;
+  word-break: keep-all;
+}
+.dirBody {
+  font-size: clamp(15px, 1.7vw, 18px);
+  line-height: 1.85;
+  color: rgba(247, 244, 238, 0.82);
+  margin: 0;
+  /* Confirmed corrections (m -> n): both authored sentences hold their own line in
+     screenshot n. The longer one measures 726px at 18px, so 700px left "changes." and
+     "case." as fragment lines; 760px gives each sentence its line. Korean's longest is
+     528px, and below 900px the section's 22px gutters bound the measure instead. */
+  max-width: 760px;
+  white-space: pre-line;
+  word-break: keep-all;
+}
+.dirClose {
+  font-family: var(--font-body);
+  font-size: clamp(18px, 2.2vw, 26px);
+  line-height: 1.95;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  color: #f7f4ee;
+  margin: 52px 0 0;
+  white-space: pre-line;
+  word-break: keep-all;
+}
+
+/* ---------- CTA ---------- */
+.cta {
+  padding: 120px 56px;
+  max-width: 1280px;
+  margin: 0 auto;
+}
+.ctaBox {
+  background: #f6f4ee;
+  border-radius: var(--radius);
+  padding: 64px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 40px;
+  flex-wrap: wrap;
+}
+.ctaText {
+  font-family: var(--font-body);
+  /* Confirmed corrections (o -> p): X-PILE, AIR DOME and Company all end on this same
+     box, so 희원 asked for one type scale across the three. Company was the odd one at
+     32px; 30px is what the product pages already use, and it is what screenshot p
+     measures (27px of ink for a line with ascenders and descenders). */
+  font-size: clamp(22px, 2.6vw, 30px);
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  /* Screenshot p also puts the sentence on one line: English needs 780px at 30px, so
+     720px broke "products." off underneath. 800px holds it and still leaves the button
+     its width inside the 1040px box. Korean measures 612px either way. */
+  max-width: 800px;
+  word-break: keep-all;
+}
+.ctaButton {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  background: var(--ink);
+  color: #ffffff;
+  padding: 17px 30px;
+  border-radius: var(--radius);
+  font-size: 14px;
+  /* Design leading. The CTA band is sized by this button, so it also takes the
+     band from 183px to the design's measured 178px (24.png). */
+  line-height: normal;
+  font-weight: 600;
+  white-space: nowrap;
+  transition: gap 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.ctaButton:hover {
+  gap: 18px;
+}
+
+/* ---------- responsive ---------- */
+@media (max-width: 900px) {
+  /* Mobile keeps the flow it has today: the one-section-per-screen sizing above is a
+     desktop-only correction, and the snap hook is off below 900px anyway. `.direction`
+     is restored to its own 92vh flex frame rather than reset, because that is what it
+     already used at every width. */
+  .question,
+  .philosophy,
+  .attitudes {
+    min-height: 0;
+    display: block;
+  }
+  .direction {
+    min-height: 92vh;
+  }
+  .heroInner,
+  .question,
+  .attitudes,
+  .dirInner,
+  .cta {
+    padding-left: 22px;
+    padding-right: 22px;
+  }
+  .question,
+  .attitudes {
+    padding-top: 100px;
+    padding-bottom: 100px;
+  }
+  .twoCol {
+    grid-template-columns: 1fr;
+  }
+  .philoImgWrap {
+    min-height: 320px;
+  }
+  .philoCopy {
+    padding: 64px 22px;
+  }
+  .attitudeGrid {
+    grid-template-columns: 1fr;
+  }
+  .ctaBox {
+    padding: 40px 28px;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .heroImg,
+  .heroKickerRow,
+  .heroTitle,
+  .heroSub {
+    animation: none !important;
+  }
+}
