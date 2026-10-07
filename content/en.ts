@@ -361,6 +361,7 @@ const en: SiteContent = {
       blog: "BLOG",
     },
     footer: {
+      brand: "cinapi",
       tagline:
         "A changing world needs changing technology.\nWith that belief, cinapi rethinks the way we build.",
       menuLabel: "MENU",

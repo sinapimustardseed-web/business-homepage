@@ -12,7 +12,7 @@ export default function SiteFooter() {
       <div className={styles.footerInner}>
         <div className={styles.footerGrid}>
           <div>
-            <div className={styles.footerBrand}>cinapi</div>
+            <div className={styles.footerBrand}>{footer.brand}</div>
             <p className={styles.footerTagline}>{footer.tagline}</p>
           </div>
 

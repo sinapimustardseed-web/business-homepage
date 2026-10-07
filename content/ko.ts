@@ -329,8 +329,10 @@ const ko: SiteContent = {
       blog: "BLOG",
     },
     footer: {
+      // Trademark filing: the Korean name is shown together with the English one.
+      brand: "시나피 cinapi",
       tagline:
-        "변하는 환경엔, 변하는 기술이 필요합니다.\ncinapi는 그 믿음으로 건축을 다시 생각합니다.",
+        "변하는 환경엔, 변하는 기술이 필요합니다.\n시나피는 그 믿음으로 건축을 다시 생각합니다.",
       menuLabel: "MENU",
       contactLabel: "CONTACT",
       addressLabel: "ADDRESS",

@@ -317,6 +317,12 @@
   font-weight: 600;
   margin-bottom: 16px;
 }
+/* 희원's trademark revision ("시나피 cinapi") sets the Korean tagline tight under
+   the brand: its first line sits ~1.15-1.18 tagline lines below the brand's
+   centre in her reference, which is a 3px gap. English keeps the original 16px. */
+.footerBrand:lang(ko) {
+  margin-bottom: 3px;
+}
 .footerTagline {
   font-size: 13px;
   line-height: 1.8;

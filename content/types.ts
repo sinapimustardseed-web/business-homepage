@@ -267,6 +267,7 @@ export interface SiteHeaderContent {
 }
 
 export interface SiteFooterContent {
+  brand: string;
   tagline: string;
   menuLabel: string;
   contactLabel: string;
